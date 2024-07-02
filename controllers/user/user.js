@@ -51,7 +51,7 @@ const register = async (req, res) => {
       parent,
       role,
     } = req.body;
-    const user = await User.findOne({ username: username });
+    const user = await User.findOne({ username: username, deleted: false });
 
     if (user) {
       return res
@@ -61,7 +61,7 @@ const register = async (req, res) => {
       // Hash the password
       const hashedPassword = await bcrypt.hash(password, 10);
       // Create a new user
-      const user = new User({
+      const newUser = {
         username,
         password: hashedPassword,
         firstName,
@@ -70,10 +70,11 @@ const register = async (req, res) => {
         parent,
         phoneNumber,
         createdDate: new Date(),
-      });
+      }; 
+      const user = new User(newUser);
       // Save the user to the database
       await user.save();
-      res.status(200).json({ message: "User created successfully" });
+      res.status(200).json({ user: newUser, message: "User created successfully" });
     }
   } catch (error) {
     res.status(500).json({ error });
@@ -122,7 +123,7 @@ let deleteData = async (req, res) => {
     }
     if (user.role !== "superAdmin") {
       // Update the user's 'deleted' field to true
-      await User.updateOne({ _id: userId }, { $set: { deleted: true } });
+      await User.deleteOne({ _id: userId });
       res.send({ message: "Record deleted Successfully" });
     } else {
       res.status(404).json({ message: "admin can not delete" });
@@ -202,7 +203,7 @@ const login = async (req, res) => {
   try {
     const { username, password } = req.body;
     // Find the user by username
-    const user = await User.findOne({ username, deleted: false }).populate({
+    const user = await User.findOne({ username: username, deleted: false }).populate({
       path: "roles",
     });
     if (!user) {
