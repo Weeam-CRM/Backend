@@ -50,6 +50,15 @@ const register = async (req, res) => {
       phoneNumber,
       parent,
       role,
+      nationality,
+      dob,
+      educationDegree,
+      passportNum,
+      uaeIdNum,
+      dubaiHomeAddress,
+      drivingLicense,
+      countryHomeAddress,
+      countryPhoneNum,
     } = req.body;
     const user = await User.findOne({ username: username, deleted: false });
 
@@ -69,12 +78,22 @@ const register = async (req, res) => {
         lastName,
         parent,
         phoneNumber,
-        createdDate: new Date(),
-      }; 
+        nationality,
+        dob,
+        educationDegree,
+        passportNum,
+        uaeIdNum,
+        dubaiHomeAddress,
+        drivingLicense,
+        countryHomeAddress,
+        countryPhoneNum,
+      };
       const user = new User(newUser);
       // Save the user to the database
       await user.save();
-      res.status(200).json({ user: newUser, message: "User created successfully" });
+      res
+        .status(200)
+        .json({ user: newUser, message: "User created successfully" });
     }
   } catch (error) {
     res.status(500).json({ error });
@@ -203,7 +222,10 @@ const login = async (req, res) => {
   try {
     const { username, password } = req.body;
     // Find the user by username
-    const user = await User.findOne({ username: username, deleted: false }).populate({
+    const user = await User.findOne({
+      username: username,
+      deleted: false,
+    }).populate({
       path: "roles",
     });
     if (!user) {
@@ -359,14 +381,14 @@ const autoAssign = async (req, res) => {
         const leadsForAgent = allUnassLeads.slice(0, leadsPerAgent);
         const leadIds =
           leadsForAgent?.map((lead) => lead?._id?.toString()) || [];
-          
-          allUnassLeads.splice(0, leadsPerAgent);
 
-          // console.log(agent?.firstName + "--" + leadsForAgent[0]); 
-          return Lead.updateMany(
-            { _id: { $in: leadIds } },
-            { $set: { agentAssigned: agent?._id?.toString() } }
-          );
+        allUnassLeads.splice(0, leadsPerAgent);
+
+        // console.log(agent?.firstName + "--" + leadsForAgent[0]);
+        return Lead.updateMany(
+          { _id: { $in: leadIds } },
+          { $set: { agentAssigned: agent?._id?.toString() } }
+        );
       } else {
         return 0;
       }
@@ -374,10 +396,9 @@ const autoAssign = async (req, res) => {
   );
 
   res.json({
-    status: true, 
-    message: "Auto assigned the leads to agents"
-  })
-
+    status: true,
+    message: "Auto assigned the leads to agents",
+  });
 
   try {
   } catch (error) {
