@@ -67,9 +67,8 @@ const leadSchema = new mongoose.Schema({
         default: Date.now
     },
     createBy: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: mongoose.Schema.ObjectId,
         ref: 'User',
-        required: true
     },
 });
 
