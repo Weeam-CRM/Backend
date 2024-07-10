@@ -139,6 +139,18 @@ const add = async (req, res) => {
   }
 };
 
+const addFromCampaign = async (req, res) => {
+  try {
+    req.body.createdDate = new Date();
+    const user = new Lead(req.body);
+    await user.save();
+    res.status(200).json(user);
+  } catch (err) {
+    console.error("Failed to create Lead:", err);
+    res.status(400).json({ error: "Failed to create Lead" });
+  }
+};
+
 const edit = async (req, res) => {
   try {
     let result = await Lead.updateOne(
@@ -391,4 +403,5 @@ module.exports = {
   deleteData,
   deleteMany,
   changeStatus,
+  addFromCampaign
 };

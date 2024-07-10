@@ -6,6 +6,7 @@ const router = express.Router();
 
 router.get('/', auth, lead.index)
 router.post('/add', auth, lead.add)
+router.post('/add/campaign', auth, lead.addFromCampaign)
 router.post('/addMany', auth, lead.addMany)
 router.get('/view/:id', auth, lead.view)
 router.put('/edit/:id', auth, lead.edit)
