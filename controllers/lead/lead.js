@@ -144,7 +144,7 @@ const addFromCampaign = async (req, res) => {
     req.body.createdDate = new Date();
 
 
-    console.log(req.body); 
+    console.log(req.query, req.body); 
 
     const newLead = {};
 
