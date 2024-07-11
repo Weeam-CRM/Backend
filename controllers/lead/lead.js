@@ -158,11 +158,11 @@ const addFromCampaign = async (req, res) => {
     }
 
     if (req.body?.Nationality) {
-      newLead["Nationality"] = req.body.Nationality;
+      newLead["nationality"] = req.body.Nationality;
     }
 
     if (req.body?.Interest) {
-      newLead["Interest"] = req.body.Interest;
+      newLead["interest"] = req.body.Interest;
     }
 
     if (req.body?.r_u_in_uae) {
