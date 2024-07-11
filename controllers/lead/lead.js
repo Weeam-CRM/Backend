@@ -143,6 +143,9 @@ const addFromCampaign = async (req, res) => {
   try {
     req.body.createdDate = new Date();
 
+
+    console.log(req.body); 
+
     const newLead = {};
 
     if (req.body["form_fields[name]"]) {
