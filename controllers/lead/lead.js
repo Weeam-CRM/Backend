@@ -24,7 +24,7 @@ const index = async (req, res) => {
   const query = req.query;
   const role = query?.role;
   const userID = query.user;
-  
+
   const dateTime = req.query?.dateTime?.split("|");
   const isDateTime = dateTime?.some((d) => d);
 
@@ -42,7 +42,7 @@ const index = async (req, res) => {
   }
   if (isDateTime && dateTime[1]) {
     const to = new Date(toUTC(dateTime[1]));
-    if(q["createdDate"]) {
+    if (q["createdDate"]) {
       q["createdDate"]["$lte"] = to;
     }
   }
@@ -142,7 +142,38 @@ const add = async (req, res) => {
 const addFromCampaign = async (req, res) => {
   try {
     req.body.createdDate = new Date();
-    const user = new Lead(req.body);
+
+    const newLead = {};
+
+    if (req.body?.name) {
+      newLead["leadName"] = req.body.name;
+    }
+
+    if (req.body?.mobile) {
+      newLead["leadPhoneNumber"] = req.body.mobile;
+    }
+
+    if (req.body?.whatsapp) {
+      newLead["leadWhatsappNumber"] = req.body.whatsapp;
+    }
+
+    if (req.body?.Nationality) {
+      newLead["Nationality"] = req.body.Nationality;
+    }
+
+    if (req.body?.Interest) {
+      newLead["Interest"] = req.body.Interest;
+    }
+
+    if (req.body?.r_u_in_uae) {
+      newLead["r_u_in_uae"] = req.body.r_u_in_uae;
+    }
+
+    if (req.body?.timetocall) {
+      newLead["timetocall"] = req.body.timetocall;
+    }
+
+    const user = new Lead(newLead);
     await user.save();
     res.status(200).json(user);
   } catch (err) {
@@ -403,5 +434,5 @@ module.exports = {
   deleteData,
   deleteMany,
   changeStatus,
-  addFromCampaign
+  addFromCampaign,
 };
