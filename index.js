@@ -12,6 +12,7 @@ const path = require('path');
 const app = express();
 // Middleware
 app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: true })); // support encoded bodies
 // Set up CORS  
 app.use(cors());
 //API Routes
