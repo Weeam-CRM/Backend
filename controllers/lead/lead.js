@@ -143,36 +143,37 @@ const addFromCampaign = async (req, res) => {
   try {
     req.body.createdDate = new Date();
 
-    console.log(req.body);
+    const fields = req.body.fields; 
+    const newLead = {
+      createdDate: new Date()
+    };; 
 
-    const newLead = {};
-
-    if (req.body["form_fields[name]"]) {
-      newLead["leadName"] = req.body["form_fields[name]"];
+    if (fields?.name) {
+      newLead["leadName"] = fields.name.value;
     }
 
-    if (req.body["form_fields[mobile]"]) {
-      newLead["leadPhoneNumber"] = req.body["form_fields[mobile]"];
+    if (fields?.mobile) {
+      newLead["leadPhoneNumber"] = fields.mobile.value;
     }
 
-    if (req.body["form_fields[whatsapp]"]) {
-      newLead["leadWhatsappNumber"] = req.body["form_fields[whatsapp]"];
+    if (fields?.whatsapp) {
+      newLead["leadWhatsappNumber"] = fields.whatsapp.value;
     }
 
-    if (req.body["form_fields[nationality]"]) {
-      newLead["nationality"] = req.body["form_fields[nationality]"];
+    if (fields?.nationality) {
+      newLead["nationality"] = fields.nationality.value;
     }
 
-    if (req.body["form_fields[interest]"]) {
-      newLead["interest"] = req.body["form_fields[interest]"];
+    if (fields?.interest) {
+      newLead["interest"] = fields.interest.value;
     }
 
-    if (req.body["form_fields[r_u_in_uae]"]) {
-      newLead["r_u_in_uae"] = req.body["form_fields[r_u_in_uae]"];
+    if (fields?.r_u_in_uae) {
+      newLead["r_u_in_uae"] = fields.r_u_in_uae.value;
     }
 
-    if (req.body["form_fields[timetocall]"]) {
-      newLead["timetocall"] = req.body["form_fields[timetocall]"];
+    if (fields?.timetocall) {
+      newLead["timetocall"] = fields.timetocall.value;
     }
 
     const user = new Lead(newLead);
