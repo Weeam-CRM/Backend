@@ -5,6 +5,7 @@ const PhoneCall = require("../../model/schema/phoneCall");
 const Task = require("../../model/schema/task");
 const MeetingHistory = require("../../model/schema/meeting");
 const DocumentSchema = require("../../model/schema/document");
+const { LeadCycle } = require("../../model/schema/leadcycle");
 
 function toUTC(dateString) {
   const localDate = new Date(dateString);
@@ -124,6 +125,9 @@ const changeStatus = async (req, res) => {
 const add = async (req, res) => {
   try {
     req.body.createdDate = new Date();
+    if(req?.user?.userId) {
+      req.body.createBy = req.user.userId; 
+    }
     const user = new Lead(req.body);
 
     const updateUser = await User.findById(user?.createBy);
@@ -185,12 +189,46 @@ const addFromCampaign = async (req, res) => {
   }
 };
 
+const history = async (req, res) => {
+    try {
+        const leadID = req.params?.lid; 
+        const lead = await Lead.findOne({_id: leadID}).populate({
+          path: "createBy"
+        }).exec(); 
+
+        const query = {
+            leadID
+        }
+
+        const allUpdates = await LeadCycle.find(query).sort({startDate: 1}).populate({
+            path: "updatedBy"
+        }).exec(); 
+        
+        res.json({lead, data: allUpdates}); 
+    } catch (err) {
+        console.error('Failed to fetch :', err);
+        res.status(400).json({ err, error: 'Failed to fetch' });
+    }
+}
+
 const edit = async (req, res) => {
   try {
+
     let result = await Lead.updateOne(
       { _id: req.params.id },
       { $set: req.body }
     );
+
+    if(req.body?.agentAssigned || req.body?.managerAssigned) {
+      const userName = await User.findById(req.body?.agentAssigned || req.body?.managerAssigned); 
+      const newLeadCycleUpdate = new LeadCycle({
+        type: req.body?.agentAssigned ? "assignment-agent" : "assignment-manager", 
+        leadID: req.params.id,
+        updatedData: userName.firstName + " " + userName.lastName, 
+        updatedBy: req.user?.userId 
+      })
+      await newLeadCycleUpdate.save(); 
+    }
     res.status(200).json(result);
   } catch (err) {
     console.error("Failed to Update Lead:", err);
@@ -438,4 +476,5 @@ module.exports = {
   deleteMany,
   changeStatus,
   addFromCampaign,
+  history
 };
