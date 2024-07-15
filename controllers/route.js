@@ -9,6 +9,7 @@ const dailyReport = require('./dailyReport/_routes');
 const reportingRoute = require('./reporting/_routes');
 const documentRoute = require('./document/_routes');
 const userRoute = require('./user/_routes');
+const leadNote = require('./leadnote/_routes');
 
 const emailRoute = require('./emailHistory/_routes');
 const phoneCallRoute = require('./phoneCall/_routes');
@@ -31,6 +32,7 @@ router.use('/reporting', reportingRoute);
 router.use('/user', userRoute);
 router.use('/payment', paymentRoute);
 router.use('/dailyReport', dailyReport); 
+router.use('/leadnote', leadNote); 
 
 router.use('/email', emailRoute);
 router.use('/phoneCall', phoneCallRoute);
