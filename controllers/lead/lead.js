@@ -197,6 +197,9 @@ const addFromCampaign = async (req, res) => {
       newLead["timetocall"] = fields.timetocall.value;
     }
 
+    newLead["ip"] = req.ip; 
+    newLead["pageUrl"] = req.headers.origin; 
+
     const user = new Lead(newLead);
     await user.save();
     res.status(200).json(user);

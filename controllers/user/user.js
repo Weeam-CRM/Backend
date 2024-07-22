@@ -191,6 +191,7 @@ const edit = async (req, res) => {
 };
 
 const getTree = async (req, res) => {
+
   try {
     const allUsers = await User.find({ deleted: false }).populate({
       path: "roles",

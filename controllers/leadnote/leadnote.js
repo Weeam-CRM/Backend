@@ -9,7 +9,7 @@ const index = async (req, res) => {
     res.json(allNotes || []);
     
   } catch (error) {
-    console.error("Failed to fetch leadnotes:", err);
+    console.error("Failed to fetch leadnotes:", error);
     res.status(400).json({ error: "Failed to fetch lead notes" });
   }
 };
