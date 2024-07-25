@@ -166,20 +166,27 @@ const deleteMany = async (req, res) => {
 
 const edit = async (req, res) => {
   try {
-    let { username, firstName, target, lastName, phoneNumber, parent } =
+    let { username, firstName, target, lastName, phoneNumber, parent, password="" } =
       req.body;
 
-    let result = await User.updateOne(
-      { _id: req.params.id },
-      {
-        $set: {
+      const updatedObj =  {
           username,
           firstName,
           lastName,
           phoneNumber,
           target,
           parent,
-        },
+        }; 
+
+        if(password.trim()) {
+          const hashedPassword = await bcrypt.hash(password, 10);
+          updatedObj['password'] = hashedPassword; 
+        }
+
+    let result = await User.updateOne(
+      { _id: req.params.id },
+      {
+        $set: updatedObj,
       }
     );
 
