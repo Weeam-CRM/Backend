@@ -120,6 +120,20 @@ const changeStatus = async (req, res) => {
       new: "New",
       no_answer: "No Answer",
       unreachable: "Unreachable",
+      waiting: "Waiting", 
+      follow_up: "Follow Up", 
+      meeting: "Meeting", 
+      follow_up_after_meeting: "Follow Up After Meeting", 
+      deal: "Deal", 
+      junk: "Junk", 
+      whatsapp_send: "Whatsapp Send", 
+      whatsapp_rec: "Whatsapp Rec", 
+      deal_out: "Deal Out", 
+      shift_project: "Shift Project", 
+      wrong_number: "Wrong Number", 
+      broker: "Broker", 
+      voice_mail: "Voice Mail", 
+      request: "Request"
     };
 
     const newLeadCycleUpdate = new LeadCycle({
