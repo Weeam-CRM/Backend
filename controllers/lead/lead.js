@@ -176,6 +176,7 @@ const add = async (req, res) => {
 
 const addFromCampaign = async (req, res) => {
   try {
+    console.log(req.query, req.originalUrl)
     req.body.createdDate = new Date();
 
     const fields = req.body.fields;
