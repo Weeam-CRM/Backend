@@ -211,8 +211,12 @@ const addFromCampaign = async (req, res) => {
       newLead["timetocall"] = fields.timetocall.value;
     }
 
-    newLead["ip"] = req.ip;
     newLead["pageUrl"] = req.body?.meta?.page_url?.value ? req.body?.meta?.page_url?.value?.slice(0, req.body?.meta?.page_url?.value?.indexOf("?")) : "";
+
+     if (fields?.ip) {
+      newLead["ip"] = fields.ip.value;
+    }
+
 
     if (fields?.utm_source) {
       newLead["leadSource"] = fields.utm_source.value;
