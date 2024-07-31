@@ -212,32 +212,28 @@ const addFromCampaign = async (req, res) => {
     }
 
     newLead["ip"] = req.ip;
-    newLead["pageUrl"] = req.headers.origin;
+    newLead["pageUrl"] = req.body?.meta?.page_url?.value ? req.body?.meta?.page_url?.value?.slice(0, req.body?.meta?.page_url?.value?.indexOf("?")) : "";
 
-    const queryObj = req.query;
-    if (queryObj?.utm_source) {
-      newLead["utm_source"] = queryObj.utm_source;
+    if (fields?.utm_source) {
+      newLead["leadSource"] = fields.utm_source.value;
     }
 
-    if (queryObj?.utm_medium) {
-      newLead["utm_medium"] = queryObj.utm_medium;
+    if (fields?.utm_medium) {
+      newLead["leadSourceMedium"] = fields.utm_medium.value;
     }
 
-    if (queryObj?.utm_campaign) {
-      newLead["utm_campaign"] = queryObj.utm_campaign;
+    if (fields?.utm_campaign) {
+      newLead["leadCampaign"] = fields.utm_campaign.value;
     }
 
-    if (queryObj?.utm_content) {
-      newLead["utm_content"] = queryObj.utm_content;
+    if (fields?.utm_content) {
+      newLead["leadSourceDetails"] = fields.utm_content.value;
     }
 
-    if (queryObj?.adset) {
-      newLead["utm_adset"] = queryObj.adset;
+    if (fields?.adset) {
+      newLead["adset"] = fields.adset.value;
     }
 
-    if (queryObj?.fbclid) {
-      newLead["utm_fbclid"] = queryObj.fbclid;
-    }
 
     const user = new Lead(newLead);
     await user.save();
