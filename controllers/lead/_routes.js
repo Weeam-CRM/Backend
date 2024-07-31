@@ -14,5 +14,4 @@ router.put('/edit/:id', auth, lead.edit)
 router.put('/changeStatus/:id', auth, lead.changeStatus)
 router.delete('/delete/:id', auth, lead.deleteData)
 router.post('/deleteMany', auth, lead.deleteMany)
-
 module.exports = router

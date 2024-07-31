@@ -120,20 +120,20 @@ const changeStatus = async (req, res) => {
       new: "New",
       no_answer: "No Answer",
       unreachable: "Unreachable",
-      waiting: "Waiting", 
-      follow_up: "Follow Up", 
-      meeting: "Meeting", 
-      follow_up_after_meeting: "Follow Up After Meeting", 
-      deal: "Deal", 
-      junk: "Junk", 
-      whatsapp_send: "Whatsapp Send", 
-      whatsapp_rec: "Whatsapp Rec", 
-      deal_out: "Deal Out", 
-      shift_project: "Shift Project", 
-      wrong_number: "Wrong Number", 
-      broker: "Broker", 
-      voice_mail: "Voice Mail", 
-      request: "Request"
+      waiting: "Waiting",
+      follow_up: "Follow Up",
+      meeting: "Meeting",
+      follow_up_after_meeting: "Follow Up After Meeting",
+      deal: "Deal",
+      junk: "Junk",
+      whatsapp_send: "Whatsapp Send",
+      whatsapp_rec: "Whatsapp Rec",
+      deal_out: "Deal Out",
+      shift_project: "Shift Project",
+      wrong_number: "Wrong Number",
+      broker: "Broker",
+      voice_mail: "Voice Mail",
+      request: "Request",
     };
 
     const newLeadCycleUpdate = new LeadCycle({
@@ -176,7 +176,6 @@ const add = async (req, res) => {
 
 const addFromCampaign = async (req, res) => {
   try {
-    console.log(req.query, req.originalUrl)
     req.body.createdDate = new Date();
 
     const fields = req.body.fields;
@@ -212,8 +211,33 @@ const addFromCampaign = async (req, res) => {
       newLead["timetocall"] = fields.timetocall.value;
     }
 
-    newLead["ip"] = req.ip; 
-    newLead["pageUrl"] = req.headers.origin; 
+    newLead["ip"] = req.ip;
+    newLead["pageUrl"] = req.headers.origin;
+
+    const queryObj = req.query;
+    if (queryObj?.utm_source) {
+      newLead["utm_source"] = queryObj.utm_source;
+    }
+
+    if (queryObj?.utm_medium) {
+      newLead["utm_medium"] = queryObj.utm_medium;
+    }
+
+    if (queryObj?.utm_campaign) {
+      newLead["utm_campaign"] = queryObj.utm_campaign;
+    }
+
+    if (queryObj?.utm_content) {
+      newLead["utm_content"] = queryObj.utm_content;
+    }
+
+    if (queryObj?.adset) {
+      newLead["utm_adset"] = queryObj.adset;
+    }
+
+    if (queryObj?.fbclid) {
+      newLead["utm_fbclid"] = queryObj.fbclid;
+    }
 
     const user = new Lead(newLead);
     await user.save();
