@@ -50,34 +50,47 @@ const index = async (req, res) => {
 
   let allData = [];
 
+  let offset = 0; 
+  let limit = 10; 
+  if(req.query?.page !== 0){
+    offset = (Number(req.query?.page) - 1) * Number(req.query?.pageSize || 10); 
+    limit = Number(req.query?.pageSize) || 10; 
+  }
+
+  let totalRecords = 0; 
+
   if (role === "Manager") {
     allData = await Lead.find({ ...q, managerAssigned: userID })
       .populate({
         path: "createBy",
         match: { deleted: false }, // Populate only if createBy.deleted is false
       })
-      .sort({ createdDate: -1 })
+      .sort({ createdDate: -1 }).skip(offset).limit(limit)
       .exec();
+      totalRecords = await Lead.find({ ...q, managerAssigned: userID }).countDocuments(); 
   } else if (role === "Agent") {
     allData = await Lead.find({ ...q, agentAssigned: userID })
       .populate({
         path: "createBy",
         match: { deleted: false }, // Populate only if createBy.deleted is false
       })
-      .sort({ createdDate: -1 })
+      .sort({ createdDate: -1 }).skip(offset).limit(limit)
       .exec();
+      totalRecords = await Lead.find({ ...q, agentAssigned: userID }).countDocuments(); 
   } else {
     allData = await Lead.find(q)
       .populate({
         path: "createBy",
         match: { deleted: false }, // Populate only if createBy.deleted is false
       })
-      .sort({ createdDate: -1 })
+      .sort({ createdDate: -1 }).skip(offset).limit(limit)
       .exec();
+      totalRecords = await Lead.find(q).countDocuments(); 
   }
 
   const result = allData;
-  res.json(result);
+  const totalPages = Math.ceil(totalRecords / (req.query?.pageSize || 10)); 
+  res.json({result, totalPages});
 };
 
 const addMany = async (req, res) => {
