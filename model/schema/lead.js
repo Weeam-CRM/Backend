@@ -26,6 +26,10 @@ const leadSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  intID: {
+    type: Number, 
+    required: true
+  }, 
   updatedDate: {
     type: Date,
     default: Date.now,

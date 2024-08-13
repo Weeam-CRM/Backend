@@ -50,14 +50,14 @@ const index = async (req, res) => {
 
   let allData = [];
 
-  let offset = 0; 
-  let limit = 10; 
-  if(req.query?.page !== 0){
-    offset = (Number(req.query?.page) - 1) * Number(req.query?.pageSize || 10); 
-    limit = Number(req.query?.pageSize) || 10; 
+  let offset = 0;
+  let limit = 10;
+  if (req.query?.page !== 0) {
+    offset = (Number(req.query?.page) - 1) * Number(req.query?.pageSize || 10);
+    limit = Number(req.query?.pageSize) || 10;
   }
 
-  let totalRecords = 0; 
+  let totalRecords = 0;
 
   if (role === "Manager") {
     allData = await Lead.find({ ...q, managerAssigned: userID })
@@ -65,38 +65,64 @@ const index = async (req, res) => {
         path: "createBy",
         match: { deleted: false }, // Populate only if createBy.deleted is false
       })
-      .sort({ createdDate: -1 }).skip(offset).limit(limit)
+      .sort({ createdDate: -1 })
+      .skip(offset)
+      .limit(limit)
       .exec();
-      totalRecords = await Lead.find({ ...q, managerAssigned: userID }).countDocuments(); 
+    totalRecords = await Lead.find({
+      ...q,
+      managerAssigned: userID,
+    }).countDocuments();
   } else if (role === "Agent") {
     allData = await Lead.find({ ...q, agentAssigned: userID })
       .populate({
         path: "createBy",
         match: { deleted: false }, // Populate only if createBy.deleted is false
       })
-      .sort({ createdDate: -1 }).skip(offset).limit(limit)
+      .sort({ createdDate: -1 })
+      .skip(offset)
+      .limit(limit)
       .exec();
-      totalRecords = await Lead.find({ ...q, agentAssigned: userID }).countDocuments(); 
+    totalRecords = await Lead.find({
+      ...q,
+      agentAssigned: userID,
+    }).countDocuments();
   } else {
     allData = await Lead.find(q)
       .populate({
         path: "createBy",
         match: { deleted: false }, // Populate only if createBy.deleted is false
       })
-      .sort({ createdDate: -1 }).skip(offset).limit(limit)
+      .sort({ createdDate: -1 })
+      .skip(offset)
+      .limit(limit)
       .exec();
-      totalRecords = await Lead.find(q).countDocuments(); 
+    totalRecords = await Lead.find(q).countDocuments();
   }
 
   const result = allData;
-  const totalPages = Math.ceil(totalRecords / (req.query?.pageSize || 10)); 
-  res.json({result, totalPages, totalLeads: totalRecords});
+  const totalPages = Math.ceil(totalRecords / (req.query?.pageSize || 10));
+  res.json({ result, totalPages, totalLeads: totalRecords });
 };
 
 const addMany = async (req, res) => {
   try {
     const data = req.body;
-    const insertedLead = await Lead.insertMany(data);
+
+    let totalLeads = await Lead.find({}).countDocuments();
+    const dataWithIDs = data.map(async (d) => {
+
+      totalLeads += 1; 
+
+      return {
+        ...d,
+        intID: totalLeads,
+      };
+    });
+
+    const result = await Promise.all(dataWithIDs); 
+
+    const insertedLead = await Lead.insertMany(result);
 
     const updateUser = await User.findById(req.user.userId);
     if (updateUser) {
@@ -172,7 +198,10 @@ const add = async (req, res) => {
     if (req?.user?.userId) {
       req.body.createBy = req.user.userId;
     }
-    const user = new Lead(req.body);
+
+    const totalLeads = await Lead.find({}).countDocuments();
+
+    const user = new Lead({ ...req.body, intID: totalLeads + 1 });
 
     const updateUser = await User.findById(user?.createBy);
     if (updateUser) {
@@ -224,12 +253,16 @@ const addFromCampaign = async (req, res) => {
       newLead["timetocall"] = fields.timetocall.value;
     }
 
-    newLead["pageUrl"] = req.body?.meta?.page_url?.value ? req.body?.meta?.page_url?.value?.slice(0, req.body?.meta?.page_url?.value?.indexOf("?")) : "";
+    newLead["pageUrl"] = req.body?.meta?.page_url?.value
+      ? req.body?.meta?.page_url?.value?.slice(
+          0,
+          req.body?.meta?.page_url?.value?.indexOf("?")
+        )
+      : "";
 
-     if (fields?.ip) {
+    if (fields?.ip) {
       newLead["ip"] = fields.ip.value;
     }
-
 
     if (fields?.utm_source) {
       newLead["leadSource"] = fields.utm_source.value;
@@ -251,8 +284,9 @@ const addFromCampaign = async (req, res) => {
       newLead["adset"] = fields.adset.value;
     }
 
+    const totalLeads = await Lead.find({}).countDocuments();
 
-    const user = new Lead(newLead);
+    const user = new Lead({ ...newLead, intID: totalLeads + 1 });
     await user.save();
     res.status(200).json(user);
   } catch (err) {
