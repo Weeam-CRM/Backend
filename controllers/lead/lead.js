@@ -90,7 +90,7 @@ const index = async (req, res) => {
 
   const result = allData;
   const totalPages = Math.ceil(totalRecords / (req.query?.pageSize || 10)); 
-  res.json({result, totalPages});
+  res.json({result, totalPages, totalLeads: totalRecords});
 };
 
 const addMany = async (req, res) => {
