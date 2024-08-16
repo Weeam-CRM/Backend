@@ -40,4 +40,8 @@ const responseFromAdmin = async (req, res) => {
   }
 };
 
+const reject = async () => {
+
+}
+
 module.exports = { add, get,reject };
