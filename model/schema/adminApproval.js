@@ -8,13 +8,13 @@ const adminApproval = new mongoose.Schema({
     leadId: {
         type: String
     },
-    agentApproval: {
+    agentName: {
         type: String
     },
     agentId: {
         type: String
     },
-    managerApproval: {
+    mangerName: {
         type: String
     },
     managerId: {

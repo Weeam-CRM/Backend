@@ -21,5 +21,23 @@ const add = async (req, res) => {
     console.log(error);
   }
 };
+const get = async (req, res) => {
+  try {
 
-module.exports = { add };
+    const ReturnData= await adminApproval.find({})
+     res.status(200).json(ReturnData);
+  } catch (error) {
+    console.log(error)
+  }
+};
+const responseFromAdmin = async (req, res) => {
+  try {
+    const { isManger, isApproved, objectId } =
+    req.body;
+    await adminApproval.deleteOne({id : objectId})
+  } catch (error) {
+    console.log(error)
+  }
+};
+
+module.exports = { add, get,reject };
