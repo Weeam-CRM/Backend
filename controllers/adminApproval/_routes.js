@@ -4,7 +4,7 @@ const auth = require('../../middelwares/auth');
 
 const router = express.Router();
 
-router.post('/add', adminApproval.add);
+router.post('/add',auth, adminApproval.add);
 router.get('/get',auth, adminApproval.get);
 router.put('/update',auth, adminApproval.responseFromAdmin);
 
