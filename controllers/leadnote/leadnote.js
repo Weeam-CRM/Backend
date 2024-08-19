@@ -23,6 +23,9 @@ const add = async (req, res) => {
       leadID: req.body.leadID
     })
     await newLeadNote.save(); 
+    await User.findByIdAndUpdate(req.body?.leadID, {
+      lastNote: req.body.note
+    }); 
     res.json({
       status: true, 
       message: "Successfully added a lead note"

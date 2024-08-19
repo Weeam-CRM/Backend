@@ -30,6 +30,9 @@ const leadSchema = new mongoose.Schema({
     type: Number, 
     required: true
   }, 
+  lastNote: {
+    type: String, 
+  }, 
   updatedDate: {
     type: Date,
     default: Date.now,
