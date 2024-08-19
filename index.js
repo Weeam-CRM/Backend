@@ -3,11 +3,11 @@ const db = require('./db/config')
 const route = require('./controllers/route');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const port = process.env.PORT || 5000
 require('dotenv').config()
+const port = process.env.PORT || 5000 
 const fs = require('fs');
 const path = require('path');
-
+ 
 //Setup Express App
 const app = express();
 // Middleware
