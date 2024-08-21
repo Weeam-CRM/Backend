@@ -114,7 +114,7 @@ const search = async (req, res) => {
     delete query["role"];
   }
 
-    const regex = new RegExp(req.query?.term || "", 'i'); 
+    const regex = new RegExp(String(req.query?.term) || "", 'i'); 
 
   const q = {
   deleted: false,
@@ -123,7 +123,9 @@ const search = async (req, res) => {
     { leadStatus: { $regex: regex } },
     { leadEmail: { $regex: regex } },
     { leadAddress: { $regex: regex } },
-    { nationality: { $regex: regex } }
+    { nationality: { $regex: regex } },
+    { leadPhoneNumber: { $regex: regex } },
+    { leadWhatsappNumber: { $regex: regex } },
   ]
 };
 
