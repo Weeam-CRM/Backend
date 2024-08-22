@@ -376,6 +376,7 @@ const add = async (req, res) => {
 
     const totalLeads = await Lead.find({}).countDocuments();
 
+
     const user = new Lead({ ...req.body, intID: totalLeads + 1 });
 
     const updateUser = await User.findById(user?.createBy);

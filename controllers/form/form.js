@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const CustomField = require("../../model/schema/customField");
+const { Lead } = require("../../model/schema/lead");
 
 const add = async (req, res) => {
     try {
@@ -26,7 +27,14 @@ const add = async (req, res) => {
         }
 
         req.body.createdDate = new Date();
-        const newDocument = new ExistingModel(req.body);
+
+        const dataObj = req.body; 
+        if(customField.moduleName === 'Lead') {
+            let totalLeads = await Lead.find({}).countDocuments();
+            dataObj.intID = totalLeads + 1; 
+        }
+        
+        const newDocument = new ExistingModel(dataObj);
         await newDocument.save();
         return res.status(200).json({ message: 'Record added successfully', data: newDocument });
 
