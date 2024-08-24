@@ -27,7 +27,7 @@ const index = async (req, res) => {
   const userID = query.user;
 
   const dateTime = req.query?.dateTime?.split("|");
-  const isDateTime = dateTime?.some((d) => d);
+  const isDateTime = dateTime?.some((d) => d && d!=="null");
 
   if (role) {
     delete query["role"];
