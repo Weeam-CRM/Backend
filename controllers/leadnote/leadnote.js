@@ -1,4 +1,4 @@
-const User = require("../../model/schema/user");
+const Lead = require("../../model/schema/lead");
 const LeadNote = require("../../model/schema/leadnote"); 
 
 const index = async (req, res) => {
@@ -23,7 +23,7 @@ const add = async (req, res) => {
       leadID: req.body.leadID
     })
     await newLeadNote.save(); 
-    await User.findByIdAndUpdate(req.body?.leadID, {
+    await Lead.findByIdAndUpdate(req.body?.leadID, {
       lastNote: req.body.note
     }); 
     res.json({
