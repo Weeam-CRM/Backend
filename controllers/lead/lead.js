@@ -331,6 +331,7 @@ const changeStatus = async (req, res) => {
       active: "Interested",
       sold: "Sold",
       pending: "Not interested",
+      reassigned: "Reassigned",
       new: "New",
       no_answer: "No Answer",
       unreachable: "Unreachable",
