@@ -220,7 +220,7 @@ const advancedSearch = async (req, res) => {
   
   const q = {
   deleted: false,
-  $or: filters
+  $and: filters
 };
 
   let allData = [];
