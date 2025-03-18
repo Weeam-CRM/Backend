@@ -12,6 +12,7 @@ const add = async (req, res) => {
     agentId,
     mangerName,
     managerId,
+    approvalStatus:"pending"
   });
   try {
     await newApproval.save();
@@ -34,14 +35,15 @@ const responseFromAdmin = async (req, res) => {
   try {
     const { isManger, isApproved, objectId } =
     req.body;
-    await adminApproval.deleteOne({id : objectId})
+   
+     const response =  await adminApproval.findByIdAndUpdate( { _id: objectId }, 
+      { $set: { approvalStatus: isApproved?"Accepted":"Rejected" } })
+    res.status(200).json({status:isApproved?true:false,message:"Status updated successfully"})
   } catch (error) {
     console.log(error)
   }
 };
 
-const reject = async () => {
 
-}
 
-module.exports = { add, get,reject };
+module.exports = { add, get, responseFromAdmin};

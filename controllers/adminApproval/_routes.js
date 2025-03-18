@@ -4,8 +4,9 @@ const auth = require('../../middelwares/auth');
 
 const router = express.Router();
 
-router.post('/add', adminApproval.add);
-router.get('/get', adminApproval.get);
+router.post('/add',auth, adminApproval.add);
+router.get('/get',auth, adminApproval.get);
+router.put('/update',auth, adminApproval.responseFromAdmin);
 
 
-module.exports = router
+module.exports = router  

@@ -20,6 +20,9 @@ const adminApproval = new mongoose.Schema({
     managerId: {
         type: String
     },
+    approvalStatus:{
+        type:String
+    }
 })
 
 module.exports = mongoose.model("AdminApproval",adminApproval)
